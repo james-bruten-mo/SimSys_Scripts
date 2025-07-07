@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# *****************************COPYRIGHT*******************************
+# (C) Crown copyright 2025 Met Office. All rights reserved.
+# For further details please refer to the file COPYRIGHT.txt
+# which you should have received as part of this distribution.
+# *****************************COPYRIGHT*******************************
+set -euo pipefail
+
+usage() {
+cat << EOF
+Usage: git_fork_merger <repo> <pr_number> [<owner>]
+    repo - Name of the repo containing the PR
+    pr_number - PR number to merge
+    owner - Owning github account, default of MetOffice
+EOF
+}
+
+# Check arguments
+if [[ $# -lt 2 ]]; then
+    usage
+    exit 2
+fi
+
+# Read input variables
+repo=$1
+pr_number=$2
+owner=${3:-"MetOffice"}
+
+# Name a location for the clone
+repo_clone="${repo}_merge_pr${pr_number}"
+
+# Get information on target and head branches from gh api
+json_data="$(gh pr view "${pr_number}" -R "MetOffice/${repo}" --json baseRefName,headRefName,headRepository,headRepositoryOwner)"
+base_branch="$(jq -r ".baseRefName" <<< "${json_data}")"
+head_branch="$(jq -r ".headRefName" <<< "${json_data}")"
+head_repo="$(jq -r ".headRepository.name" <<< "${json_data}")"
+head_owner="$(jq -r ".headRepositoryOwner.login" <<< "${json_data}")"
+
+# Clone and move to the upstream repo
+gh repo clone "MetOffice/${repo}" "${repo_clone}"
+cd "${repo_clone}"
+
+# Make sure we're looking at the target branch
+git checkout "${base_branch}"
+
+# Add the fork as a remote source named downstream and fetch refs
+git remote add downstream "git@github.com:${head_owner}/${head_repo}"
+git fetch downstream
+
+# Merge in the requested branch
+git merge --squash "downstream/${head_branch}"
+
+echo ""
+echo "[SUCCESS] - Merged branch from ${head_owner}/${head_repo}/${head_branch} into ${base_branch}"
+echo "Results available in ./${repo_clone}"
+
