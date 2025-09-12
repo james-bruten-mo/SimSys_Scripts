@@ -65,9 +65,9 @@ def delete_clone(loc):
 def clone_mirror(repo, loc):
 
     commands = (
-        f"git clone {REPOS[repo]["mirror_loc"]} {loc}",
-        f"git -C {loc} fetch origin {REPOS[repo]["mirror_fetch"]}",
-        "git checkout FETCH_HEAD"
+        f"git clone {REPOS[repo]['mirror_loc']} {loc}",
+        f"git -C {loc} fetch origin {REPOS[repo]['mirror_fetch']}",
+        f"git -C {loc} checkout FETCH_HEAD"
     )
     for command in commands:
         run_command(command)
@@ -80,7 +80,6 @@ def merge_branch(loc):
 
 
 def write_new_ref(dependency, new_ref, dependencies_file):
-    print(f"Writing ref for {dependency}")
 
     with open(dependencies_file, "r") as f:
         lines = f.readlines()
@@ -122,8 +121,9 @@ def launch_test_suite(repo, loc):
     command = (
         "cylc vip "
         f"-n gh_{repo}_{date} "
-        f"-z g={REPOS[repo]["groups"]} "
-        f"{os.path.join(loc, "rose-stem")}"
+        f"-z g={REPOS[repo]['groups']} "
+        "-S USE_MIRRORS=true "
+        f"{os.path.join(loc, 'rose-stem')}"
     )
     run_command(command)
 
