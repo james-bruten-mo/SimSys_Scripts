@@ -13,14 +13,21 @@ import os
 import subprocess
 import shutil
 import argparse
+import yaml
+import re
 from datetime import datetime
 
 REPOS = {
-    "lfric_apps": {
-        "upstream": "git@github.com:MetOffice/lfric_apps.git",
-        "downstream": "git@github.com:james-bruten-mo/lfric_apps.git",
-        "branch": "lfric_apps_rose-stem",
-        "groups": "developer",
+    # "lfric_apps": {
+    #     "upstream": "git@github.com:MetOffice/lfric_apps.git",
+    #     "downstream": "git@github.com:james-bruten-mo/lfric_apps.git",
+    #     "branch": "lfric_apps_rose-stem",
+    #     "groups": "developer",
+    # },
+    "um": {
+        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/um.git",
+        "mirror_fetch": "james-bruten-mo/um_git_test",
+        "groups": "all",
     }
 }
 
@@ -55,32 +62,59 @@ def delete_clone(loc):
     if os.path.exists(loc):
         shutil.rmtree(loc)
 
+def clone_mirror(repo, loc):
 
-def clone_upstream(repo, loc):
-
-    commands = [
-        f"git clone {REPOS[repo]["upstream"]} {loc}",
-        f"git -C {loc} checkout trunk",
-    ]
+    commands = (
+        f"git clone {REPOS[repo]["mirror_loc"]} {loc}",
+        f"git -C {loc} fetch origin {REPOS[repo]["mirror_fetch"]}",
+        "git checkout FETCH_HEAD"
+    )
     for command in commands:
         run_command(command)
 
 
-def set_remote(repo, loc):
+def merge_branch(loc):
 
-    commands = [
-        f"git -C {loc} remote add {repo}_fork {REPOS[repo]["downstream"]}",
-        f"git -C {loc} fetch {repo}_fork",
-    ]
-    for command in commands:
-        run_command(command)
-
-
-def merge_branch(repo, loc):
-
-    command = f"git -C {loc} merge {repo}_fork/{REPOS[repo]["branch"]}"
+    command = f"git -C {loc} merge origin/trunk"
     run_command(command)
 
+
+def write_new_ref(dependency, new_ref, dependencies_file):
+    print(f"Writing ref for {dependency}")
+
+    with open(dependencies_file, "r") as f:
+        lines = f.readlines()
+
+    in_section = False
+    for i, line in enumerate(lines):
+        if line.startswith(f"{dependency}:"):
+            in_section = True
+        if in_section and "ref:" in line:
+            line = line.split(":")
+            line[-1] = new_ref
+            line = f"{line[0]}: {line[1]}\n"
+            lines[i] = line
+            break
+
+    with open(dependencies_file, "w") as f:
+        for line in lines:
+            f.write(line)
+
+
+def update_dependencies(loc):
+    dependencies_file = os.path.join(loc, "dependencies.yaml")
+
+    with open(dependencies_file, "r") as stream:
+        dependencies = yaml.safe_load(stream)
+
+    for dependency, values in dependencies.items():
+        if not values["source"] or not values["ref"]:
+            continue
+        if ".git" not in values["source"]:
+            continue
+        if not re.match(r"^\s*([0-9a-f]{40})\s*$", values["ref"]):
+            continue
+        write_new_ref(dependency, "", dependencies_file)
 
 def launch_test_suite(repo, loc):
 
@@ -89,7 +123,6 @@ def launch_test_suite(repo, loc):
         "cylc vip "
         f"-n gh_{repo}_{date} "
         f"-z g={REPOS[repo]["groups"]} "
-        "-S USE_HEADS=true "
         f"{os.path.join(loc, "rose-stem")}"
     )
     run_command(command)
@@ -146,11 +179,11 @@ def main():
 
     delete_clone(loc)
 
-    clone_upstream(args.repo, os.path.join(clone_loc, args.repo))
+    clone_mirror(args.repo, os.path.join(clone_loc, args.repo))
 
-    set_remote(args.repo, loc)
+    merge_branch(loc)
 
-    merge_branch(args.repo, loc)
+    update_dependencies(loc)
 
     update_clone_loc(args.repo, loc)
 
