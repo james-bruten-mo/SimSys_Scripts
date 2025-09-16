@@ -28,6 +28,11 @@ REPOS = {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/um.git",
         "mirror_fetch": "james-bruten-mo/um_git_test",
         "groups": "all",
+    },
+    "jules": {
+        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/jules.git",
+        "mirror_fetch": "james-bruten-mo/jules_git_test",
+        "groups": "all",
     }
 }
 
