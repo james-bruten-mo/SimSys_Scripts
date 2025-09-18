@@ -24,6 +24,11 @@ REPOS = {
     #     "branch": "lfric_apps_rose-stem",
     #     "groups": "developer",
     # },
+    "lfric_core": {
+        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/ukca.git",
+        "mirror_fetch": "james-bruten-mo/lfric_core_git_test",
+        "groups": "all",
+    },
     "um": {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/um.git",
         "mirror_fetch": "james-bruten-mo/um_git_test",
@@ -80,7 +85,7 @@ def clone_mirror(repo, loc):
 
 def merge_branch(loc):
 
-    command = f"git -C {loc} merge origin/trunk"
+    command = f"git -C {loc} merge --no-edit origin/trunk"
     run_command(command)
 
 
