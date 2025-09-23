@@ -25,7 +25,7 @@ REPOS = {
     #     "groups": "developer",
     # },
     "lfric_core": {
-        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/ukca.git",
+        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/lfric_core.git",
         "mirror_fetch": "james-bruten-mo/lfric_core_git_test",
         "groups": "all",
     },
