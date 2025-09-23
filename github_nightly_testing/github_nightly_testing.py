@@ -18,12 +18,11 @@ import re
 from datetime import datetime
 
 REPOS = {
-    # "lfric_apps": {
-    #     "upstream": "git@github.com:MetOffice/lfric_apps.git",
-    #     "downstream": "git@github.com:james-bruten-mo/lfric_apps.git",
-    #     "branch": "lfric_apps_rose-stem",
-    #     "groups": "developer",
-    # },
+    "lfric_apps": {
+        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/lfric_apps.git",
+        "mirror_fetch": "james-bruten-mo/lfric_apps_rose-stem",
+        "groups": "azspice",
+    },
     "lfric_core": {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/lfric_core.git",
         "mirror_fetch": "james-bruten-mo/lfric_core_git_test",
