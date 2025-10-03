@@ -128,7 +128,6 @@ def launch_test_suite(repo, loc):
 
     date = datetime.today().strftime("%Y-%m-%d")
     command = (
-        "export CYLC_VERSION=8.6.0-1 ; "
         "cylc vip "
         f"-n gh_{repo}_{date} "
         f"-z g={REPOS[repo]['groups']} "
