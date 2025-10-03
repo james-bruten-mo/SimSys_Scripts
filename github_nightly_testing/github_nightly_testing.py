@@ -136,28 +136,6 @@ def launch_test_suite(repo, loc):
     )
     run_command(command)
 
-
-def update_clone_loc(repo, loc):
-    """
-    While cylc can't give us the location of the source, update the hardcoded location
-    """
-
-    conf_file = os.path.join(loc, "rose-stem", "rose-suite.conf")
-    with open(conf_file, "r") as f:
-        lines = f.readlines()
-
-    for i, line in enumerate(lines):
-        line = line.strip()
-        if line.startswith(f"{repo.upper()}_SOURCE"):
-            line = line.split(":")
-            lines[i] = f'{line[0]}:{loc}"\n'
-            break
-
-    with open(conf_file, "w") as f:
-        for line in lines:
-            f.write(line)
-
-
 def parse_args():
     """
     Read command line args
@@ -193,8 +171,6 @@ def main():
     merge_branch(loc)
 
     update_dependencies(loc)
-
-    update_clone_loc(args.repo, loc)
 
     launch_test_suite(args.repo, loc)
 
