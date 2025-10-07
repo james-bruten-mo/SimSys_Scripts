@@ -13,9 +13,8 @@ import os
 import subprocess
 import shutil
 import argparse
-import yaml
-import re
 from datetime import datetime
+from update_dependencies import update_dependencies
 
 REPOS = {
     "lfric_apps": {
@@ -88,42 +87,6 @@ def merge_branch(loc):
     run_command(command)
 
 
-def write_new_ref(dependency, new_ref, dependencies_file):
-
-    with open(dependencies_file, "r") as f:
-        lines = f.readlines()
-
-    in_section = False
-    for i, line in enumerate(lines):
-        if line.startswith(f"{dependency}:"):
-            in_section = True
-        if in_section and "ref:" in line:
-            line = line.split(":")
-            line[-1] = new_ref
-            line = f"{line[0]}: {line[1]}\n"
-            lines[i] = line
-            break
-
-    with open(dependencies_file, "w") as f:
-        for line in lines:
-            f.write(line)
-
-
-def update_dependencies(loc):
-    dependencies_file = os.path.join(loc, "dependencies.yaml")
-
-    with open(dependencies_file, "r") as stream:
-        dependencies = yaml.safe_load(stream)
-
-    for dependency, values in dependencies.items():
-        if not values["source"] or not values["ref"]:
-            continue
-        if ".git" not in values["source"]:
-            continue
-        if not re.match(r"^\s*([0-9a-f]{40})\s*$", values["ref"]):
-            continue
-        write_new_ref(dependency, "", dependencies_file)
-
 def launch_test_suite(repo, loc):
 
     date = datetime.today().strftime("%Y-%m-%d")
@@ -135,6 +98,7 @@ def launch_test_suite(repo, loc):
         f"{os.path.join(loc, 'rose-stem')}"
     )
     run_command(command)
+
 
 def parse_args():
     """
@@ -170,7 +134,7 @@ def main():
 
     merge_branch(loc)
 
-    update_dependencies(loc)
+    update_dependencies(os.path.join(loc, "dependencies.yaml"))
 
     launch_test_suite(args.repo, loc)
 
