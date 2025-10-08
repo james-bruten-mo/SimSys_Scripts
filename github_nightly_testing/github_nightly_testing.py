@@ -134,8 +134,6 @@ def main():
 
     merge_branch(loc)
 
-    update_dependencies(os.path.join(loc, "dependencies.yaml"))
-
     launch_test_suite(args.repo, loc)
 
 
