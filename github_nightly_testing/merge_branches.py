@@ -56,8 +56,8 @@ def update_clone(path):
         print(f"Updating Dependencies for {path}")
         try:
             update_dependencies(path / "dependencies.yaml")
-        except:
-            print(f"Error updating dependencies for {path}")
+        except Exception as e:
+            print(f"Error updating dependencies for {path}\n\n{e}")
 
     print()
 
