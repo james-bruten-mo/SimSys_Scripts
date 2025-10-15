@@ -55,7 +55,7 @@ def update_clone(path):
     if "lfric_apps" in str(path) or "um" in str(path):
         print(f"Updating Dependencies for {path}")
         try:
-            update_dependencies(dependencies_file=path / "dependencies.yaml")
+            update_dependencies(path / "dependencies.yaml")
         except Exception as e:
             print(f"Error updating dependencies for {path}\n\n{e}")
 

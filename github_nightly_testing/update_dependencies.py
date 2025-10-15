@@ -4,11 +4,13 @@ import subprocess
 import tempfile
 import re
 import shutil
+import argparse
+from pathlib import Path
 
-def write_new_ref(dependency, new_ref):
+def write_new_ref(dependencies_file, dependency, new_ref):
     print(f"Writing ref for {dependency}")
 
-    with open("dependencies.yaml", "r") as f:
+    with open(dependencies_file, "r") as f:
         lines = f.readlines()
 
     in_section = False
@@ -22,7 +24,7 @@ def write_new_ref(dependency, new_ref):
             lines[i] = line
             break
 
-    with open("dependencies.yaml", "w") as f:
+    with open(dependencies_file, "w") as f:
         for line in lines:
             f.write(line)
 
@@ -73,7 +75,7 @@ def get_latest_hash(dependency, values):
     return result.stdout
 
 
-def update_dependencies(dependencies_file="dependencies.yaml"):
+def update_dependencies(dependencies_file):
 
     with open(dependencies_file, "r") as stream:
         dependencies = yaml.safe_load(stream)
@@ -88,8 +90,15 @@ def update_dependencies(dependencies_file="dependencies.yaml"):
         new_ref = get_latest_hash(dependency, values)
         new_ref = new_ref.strip("'\"")
         if new_ref != str(values["ref"]):
-            write_new_ref(dependency, new_ref)
+            write_new_ref(dependencies_file, dependency, new_ref)
 
 
 if __name__ == "__main__":
-    update_dependencies()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "dependencies",
+        help="Path to dependencies.yaml file"
+    )
+    args = parser.parse_args()
+    dependencies_file = Path(args.dependencies) / "dependencies.yaml"
+    update_dependencies(dependencies_file)
