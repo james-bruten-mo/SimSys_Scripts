@@ -14,7 +14,6 @@ import subprocess
 import shutil
 import argparse
 from datetime import datetime
-from update_dependencies import update_dependencies
 
 REPOS = {
     "lfric_apps": {
