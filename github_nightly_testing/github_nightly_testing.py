@@ -35,7 +35,7 @@ REPOS = {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/jules.git",
         "mirror_fetch": "james-bruten-mo/jules_git_test",
         "groups": "all",
-    }
+    },
 }
 
 
@@ -69,12 +69,13 @@ def delete_clone(loc):
     if os.path.exists(loc):
         shutil.rmtree(loc)
 
+
 def clone_mirror(repo, loc):
 
     commands = (
         f"git clone {REPOS[repo]['mirror_loc']} {loc}",
         f"git -C {loc} fetch origin {REPOS[repo]['mirror_fetch']}",
-        f"git -C {loc} checkout FETCH_HEAD"
+        f"git -C {loc} checkout FETCH_HEAD",
     )
     for command in commands:
         run_command(command)

@@ -7,6 +7,7 @@ import shutil
 import argparse
 from pathlib import Path
 
+
 def write_new_ref(dependencies_file, dependency, new_ref):
     print(f"Writing ref for {dependency}")
 
@@ -30,31 +31,31 @@ def write_new_ref(dependencies_file, dependency, new_ref):
 
 
 def run_command(command, shell=False, rval=True):
-        """
-        Run a subprocess command and return the result object
-        Inputs:
-            - command, str with command to run
-        Outputs:
-            - result object from subprocess.run
-        """
-        # print(command)
-        if not shell and type(command) is not list:
-            command = command.split()
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            text=True,
-            timeout=300,
-            shell=shell,
-            check=False,
+    """
+    Run a subprocess command and return the result object
+    Inputs:
+        - command, str with command to run
+    Outputs:
+        - result object from subprocess.run
+    """
+    # print(command)
+    if not shell and type(command) is not list:
+        command = command.split()
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        timeout=300,
+        shell=shell,
+        check=False,
+    )
+    if result.returncode:
+        print(result.stdout, end="\n\n\n")
+        raise RuntimeError(
+            f"[FAIL] Issue found running command {command}\n\n{result.stderr}"
         )
-        if result.returncode:
-            print(result.stdout, end="\n\n\n")
-            raise RuntimeError(
-                f"[FAIL] Issue found running command {command}\n\n{result.stderr}"
-            )
-        if rval:
-            return result
+    if rval:
+        return result
 
 
 def get_latest_hash(dependency, values):
@@ -65,7 +66,7 @@ def get_latest_hash(dependency, values):
     commands = (
         f"git -C {tmpdir} init",
         f"git -C {tmpdir} remote add upstream {values['source']}",
-        f"git -C {tmpdir} fetch upstream"
+        f"git -C {tmpdir} fetch upstream",
     )
     for command in commands:
         run_command(command)
@@ -76,6 +77,8 @@ def get_latest_hash(dependency, values):
 
 
 def update_dependencies(dependencies_file):
+
+    rval = False
 
     with open(dependencies_file, "r") as stream:
         dependencies = yaml.safe_load(stream)
@@ -91,14 +94,14 @@ def update_dependencies(dependencies_file):
         new_ref = new_ref.strip("'\"")
         if new_ref != str(values["ref"]):
             write_new_ref(dependencies_file, dependency, new_ref)
+            rval = True
+
+    return rval
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "dependencies",
-        help="Path to dependencies.yaml file"
-    )
+    parser.add_argument("dependencies", help="Path to dependencies.yaml file")
     args = parser.parse_args()
     dependencies_file = Path(args.dependencies) / "dependencies.yaml"
     update_dependencies(dependencies_file)

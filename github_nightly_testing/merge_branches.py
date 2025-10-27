@@ -55,7 +55,21 @@ def update_clone(path):
     if "lfric_apps" in str(path) or "um" in str(path):
         print(f"Updating Dependencies for {path}")
         try:
-            update_dependencies(path / "dependencies.yaml")
+            changes = update_dependencies(path / "dependencies.yaml")
+            if changes:
+                print(f"Committing Dependencies to {path}")
+                commands = (
+                    f"git -C {path} commit -a -m 'update dependencies'",
+                    f"git -C {path} push",
+                )
+                for command in commands:
+                    result = run_command(command)
+                    if result.returncode:
+                        print(
+                            "Failure Committing and Pushing Dependencies\n"
+                            f"{result.stderr}"
+                        )
+                        return
         except Exception as e:
             print(f"Error updating dependencies for {path}\n\n{e}")
 
