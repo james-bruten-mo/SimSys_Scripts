@@ -26,7 +26,7 @@ def run_command(command, shell=False):
     return result
 
 
-def update_clone(path):
+def update_clone(path, clone):
     """
     Merge in trunk latest and update dependencies if um/apps
     """
@@ -38,11 +38,16 @@ def update_clone(path):
         print(f"Failure fetching upstream for {clone}\n{result.stderr}")
         return
 
-    print(f"Merging trunk into {path}")
-    command = f"git -C {path} merge --no-edit upstream/trunk"
+    if clone in ("jules",):
+        branch = "main"
+    else:
+        branch = "trunk"
+
+    print(f"Merging {branch} into {path}")
+    command = f"git -C {path} merge --no-edit upstream/{branch}"
     result = run_command(command)
     if result.returncode:
-        print(f"Failure merging trunk into {clone}\n{result.stderr}")
+        print(f"Failure merging {branch} into {clone}\n{result.stderr}")
         return
 
     print(f"Pushing from {path}")
@@ -63,7 +68,7 @@ def update_clone(path):
                     f"git -C {path} push",
                 )
                 for command in commands:
-                    result = run_command(command)
+                    result = run_command(command, shell=True)
                     if result.returncode:
                         print(
                             "Failure Committing and Pushing Dependencies\n"
@@ -86,4 +91,4 @@ for clone in (
     "ukca",
 ):
     path = start_path / clone
-    update_clone(path)
+    update_clone(path, clone)

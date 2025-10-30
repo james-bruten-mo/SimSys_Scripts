@@ -60,7 +60,7 @@ def run_command(command, shell=False, rval=True):
 
 def get_latest_hash(dependency, values):
     branch = "trunk"
-    if dependency.lower() in ("simsys_scripts", "mule", "shumlib"):
+    if dependency.lower() in ("simsys_scripts", "mule", "shumlib", "jules"):
         branch = "main"
     tmpdir = tempfile.mkdtemp()
     commands = (

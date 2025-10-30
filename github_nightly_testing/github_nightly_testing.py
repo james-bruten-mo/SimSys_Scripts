@@ -81,12 +81,6 @@ def clone_mirror(repo, loc):
         run_command(command)
 
 
-def merge_branch(loc):
-
-    command = f"git -C {loc} merge --no-edit origin/trunk"
-    run_command(command)
-
-
 def launch_test_suite(repo, loc):
 
     date = datetime.today().strftime("%Y-%m-%d")
@@ -131,8 +125,6 @@ def main():
     delete_clone(loc)
 
     clone_mirror(args.repo, os.path.join(clone_loc, args.repo))
-
-    merge_branch(loc)
 
     launch_test_suite(args.repo, loc)
 
