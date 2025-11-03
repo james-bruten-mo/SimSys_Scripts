@@ -38,7 +38,7 @@ def update_clone(path, clone):
         print(f"Failure fetching upstream for {clone}\n{result.stderr}")
         return
 
-    if clone in ("jules",):
+    if clone in ("jules", "ukca"):
         branch = "main"
     else:
         branch = "trunk"
