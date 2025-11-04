@@ -88,7 +88,6 @@ for clone in (
     "jules",
     "lfric_apps",
     "lfric_core",
-    "ukca",
 ):
     path = start_path / clone
     update_clone(path, clone)
