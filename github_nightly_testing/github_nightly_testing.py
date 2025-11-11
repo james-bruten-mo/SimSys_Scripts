@@ -26,11 +26,6 @@ REPOS = {
         "mirror_fetch": "james-bruten-mo/lfric_core_git_test",
         "groups": "all",
     },
-    "um": {
-        "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/um.git",
-        "mirror_fetch": "james-bruten-mo/um_git_test",
-        "groups": "all",
-    },
 }
 
 

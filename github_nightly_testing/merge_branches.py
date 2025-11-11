@@ -38,7 +38,7 @@ def update_clone(path, clone):
         print(f"Failure fetching upstream for {clone}\n{result.stderr}")
         return
 
-    if clone in ("jules", "ukca"):
+    if clone in ("jules", "ukca", "um"):
         branch = "main"
     else:
         branch = "trunk"
@@ -84,7 +84,6 @@ def update_clone(path, clone):
 start_path = Path("/var/tmp/persistent/fork_clones/test_suites")
 
 for clone in (
-    "um",
     "jules",
     "lfric_apps",
     "lfric_core",
