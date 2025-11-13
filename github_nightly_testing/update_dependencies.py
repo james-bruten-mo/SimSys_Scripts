@@ -59,9 +59,9 @@ def run_command(command, shell=False, rval=True):
 
 
 def get_latest_hash(dependency, values):
-    branch = "trunk"
-    if dependency.lower() in ("simsys_scripts", "mule", "shumlib", "jules", "um_meta", "um_aux", "ukca", "socrates", "socrates-spectral", "um", "casim"):
-        branch = "main"
+    branch = "main"
+    if dependency == "lfric_core":
+        branch = "trunk"
     tmpdir = tempfile.mkdtemp()
     commands = (
         f"git -C {tmpdir} init",
