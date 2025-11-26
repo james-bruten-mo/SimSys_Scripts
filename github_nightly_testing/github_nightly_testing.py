@@ -19,7 +19,7 @@ REPOS = {
     "lfric_apps": {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/lfric_apps.git",
         "mirror_fetch": "james-bruten-mo/lfric_apps_rose-stem",
-        "groups": "azspice",
+        "groups": "all",
     },
     "lfric_core": {
         "mirror_loc": "/data/users/gitassist/git_mirrors/MetOffice/lfric_core.git",
