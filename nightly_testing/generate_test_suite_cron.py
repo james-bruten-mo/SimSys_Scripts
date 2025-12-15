@@ -54,7 +54,7 @@ DEPENDENCIES = {
     "ukca": [],
 }
 
-CLONE_DIR = os.path.join(os.environ["TMPDIR"], os.environ["USER"])
+CLONE_DIR = os.path.join(os.environ["SCRATCH"], "nightly_clones")
 MIRROR_PATH = "/data/users/gitassist/git_mirrors/"
 UMDIR = os.environ["UMDIR"]
 PROFILE = ". /etc/profile"
