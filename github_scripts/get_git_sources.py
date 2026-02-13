@@ -196,9 +196,10 @@ def merge_source(
         if unmerged_files:
             handle_merge_conflicts(source, ref, dest, repo)
         else:
-            raise subprocess.CalledProcessError(
-                result.returncode, command, result.stdout, result.stderr
-            )
+            raise Exception(f"Error running command: {command}\n\nStdout:\n{result.stdout}\n\nStderr:{result.stderr}")
+            # raise subprocess.CalledProcessError(
+            #     result.returncode, command, result.stdout, result.stderr
+            # )
 
     # Remove the added remote
     run_command(f"git -C {dest} remote remove local")
