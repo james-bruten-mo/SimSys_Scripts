@@ -251,7 +251,7 @@ class ApplyMacros:
         version: str,
         apps: Path,
         core: Path,
-        jules: Path,
+        jules: Path | None = None,
         testing: bool = False,
     ) -> None:
         self.tag: str = tag
@@ -1098,6 +1098,7 @@ class ApplyMacros:
         result = run_command(command)
         if result.returncode:
             print(f"[FAIL] The rose-stem app {app} failed to upgrade")
+            print(os.environ["ROSE_META_PATH"])
             raise RuntimeError(
                 f"\nThe command run:\n{command}"
                 f"\nThe error message produced:\n{result.stderr}"
