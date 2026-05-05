@@ -392,7 +392,7 @@ def parse_args() -> argparse.Namespace:
         "--jules",
         required=True,
         help="The newly released version of Jules for jules-lfric metadata imports "
-        "(format X.Y)"
+        "(format X.Y)",
     )
     parser.add_argument(
         "-t",

@@ -1280,4 +1280,6 @@ def apply_macros_main(
 
 if __name__ == "__main__":
     args = parse_args()
-    apply_macros_main(args.tag, args.cname, args.version, args.apps, args.core, args.jules)
+    apply_macros_main(
+        args.tag, args.cname, args.version, args.apps, args.core, args.jules
+    )
