@@ -241,7 +241,9 @@ def copy_head_meta(meta_dirs: list[Path], apps: Path, core: Path, version: str) 
         _ = run_command(command)
 
 
-def update_meta_import_path(meta_dirs: list[Path], version: str, jules: str) -> None:
+def update_meta_import_path(
+    meta_dirs: list[Path], version: str, jules_version: str
+) -> None:
     """
     Change HEAD to vnX.Y in meta import statements in the newly created
     vnX.Y/rose-meta.conf files
@@ -262,7 +264,7 @@ def update_meta_import_path(meta_dirs: list[Path], version: str, jules: str) -> 
                 break
             if in_imports:
                 if "jules-lfric" in line:
-                    line = line.replace("HEAD", jules)
+                    line = line.replace("HEAD", jules_version)
                 else:
                     line = line.replace("HEAD", version)
                 lines[i] = line
@@ -389,7 +391,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "-j",
-        "--jules",
+        "--jules_version",
         required=True,
         help="The newly released version of Jules for jules-lfric metadata imports "
         "(format X.Y)",
@@ -423,7 +425,7 @@ def parse_args() -> argparse.Namespace:
     args.core = args.core.expanduser().absolute()
     args.version = f"vn{args.version}"
     args.old_version = f"vn{args.old_version}"
-    args.jules = f"vn{args.jules}"
+    args.jules_version = f"vn{args.jules_version}"
 
     return args
 
@@ -471,7 +473,7 @@ def main() -> None:
 
     copy_head_meta(meta_dirs, args.apps, args.core, args.version)
 
-    update_meta_import_path(meta_dirs, args.version, args.jules)
+    update_meta_import_path(meta_dirs, args.version, args.jules_version)
 
     upgrade_file_name = copy_versions_files(
         meta_dirs, args.old_version, args.version, args.apps, args.core

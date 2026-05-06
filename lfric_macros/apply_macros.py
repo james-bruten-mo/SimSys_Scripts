@@ -248,7 +248,7 @@ class ApplyMacros:
         self,
         tag: str,
         cname: str | None,
-        version: str,
+        version: str | None,
         apps: Path,
         core: Path,
         jules: Path | None = None,
