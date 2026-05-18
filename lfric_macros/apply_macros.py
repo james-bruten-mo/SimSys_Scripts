@@ -327,13 +327,14 @@ class ApplyMacros:
 
     def get_dependency_paths(self, source: str | None, repo: str) -> Path:
         """
-        Parse the core command line arguments to get the path to a git clone.
+        Parse the core/jules command line arguments to get the path to a git clone.
         If the source isn't defined, first populate the source by reading the
         dependencies.yaml file.
         If the source is a remote GitHub source clone it to a temporary location
         Inputs:
             - source, The command line argument for the source. If not set this will be
               None
+            - repo, The name of the repository to clone
         Outputs:
             - The path to the source working copy to use
         """
