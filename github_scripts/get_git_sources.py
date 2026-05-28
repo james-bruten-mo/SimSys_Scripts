@@ -6,7 +6,7 @@
 """
 Helper functions for cloning git sources in command line builds
 
-Reads CONFLCIT_IGNORES environment variable to get a list of comma-separated
+Reads CONFLICT_IGNORES environment variable to get a list of comma-separated
 files/directories to ignore merge conflicts in. These should be relative to the
 top-level of the repo. If not set, then a default list is defined below.
 """
