@@ -53,7 +53,7 @@ if __name__ == "__main__":
     for top_dir_path in source_path.iterdir():
         # e.g. applications,science,interfaces
         # don't try to loop over files or hidden directories
-        if not top_dir_path.is_dir() or top_dir_path.startswith("."):
+        if not top_dir_path.is_dir() or str(top_dir_path).startswith("."):
             continue
         for app_path in top_dir_path.iterdir():
             # e.g. adjoint_tests, adjoint, coupled_interface
