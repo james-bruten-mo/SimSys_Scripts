@@ -1288,6 +1288,7 @@ def apply_macros_main(
     apps: Path = Path(".").absolute(),
     core: str | None = None,
     jules: str | None = None,
+    nproc: int = 4,
 ) -> None:
     """
     Main function for this program
@@ -1299,10 +1300,10 @@ def apply_macros_main(
 
     # Pre-process macros
     banner_print("Pre-Processing Macros")
-    macro_object.preprocess_macros(args.processes)
+    macro_object.preprocess_macros(nproc)
 
     # Upgrade Rose Stem Apps
-    macro_object.upgrade_apps(args.processes)
+    macro_object.upgrade_apps(nproc)
 
     # Clean up temporary directories
     for repo, directory in macro_object.temp_dirs.items():
@@ -1325,5 +1326,11 @@ def apply_macros_main(
 if __name__ == "__main__":
     args = parse_args()
     apply_macros_main(
-        args.tag, args.cname, args.version, args.apps, args.core, args.jules
+        args.tag,
+        args.cname,
+        args.version,
+        args.apps,
+        args.core,
+        args.jules,
+        args.processes,
     )
